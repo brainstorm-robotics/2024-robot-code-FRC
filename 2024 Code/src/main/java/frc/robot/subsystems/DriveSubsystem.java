@@ -120,12 +120,7 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
             Drive.kModuleToCenterDistance, // Radius in meters of 2 robot using l^2 +w^2 both in inches
         new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
-        () -> {
-          boolean onRed = SmartDashboard.getBoolean("Red Alliance",true);
-
-          return onRed;
-        },
-        //this, // flip the path? *** needs work ***
+        this,
         this // Reference to this subsystem to set requirements
     );
 
@@ -134,7 +129,7 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
   } // end constructor DriveSubsystem()
 
 
-
+  /*
   /**
    * This method is required to implement the BooleanSupplier for the
    * PathPlanner's AutoBuilder. The value returned should be obtained
@@ -144,13 +139,13 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
    */
   public boolean getAsBoolean() {
 
-    boolean alliance = SmartDashboard.getBoolean("Red Alliance",true);
+    boolean onRed = SmartDashboard.getBoolean("Red Alliance",true);
 
     // report alliance colour in the System Log
 
     String allianceString;
 
-    if (alliance){
+    if (onRed){
       allianceString = "Red";
     } // end if
     else {
@@ -159,7 +154,7 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
 
     System.out.println("/n*** " + allianceString + " alliance ***/n/n");
 
-    return alliance;
+    return onRed;
     
   } // end getAsBoolean()
 

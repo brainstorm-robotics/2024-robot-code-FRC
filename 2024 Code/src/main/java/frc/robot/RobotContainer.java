@@ -37,6 +37,7 @@ import frc.robot.subsystems.sensors.NavX2Gyro;
 //import frc.robot.subsystems.sensors.UltrasonicDistanceSensor;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 
 
@@ -278,7 +279,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    return autoChooser.getSelected();
+    //return autoChooser.getSelected();
+    return new PathPlannerAuto("straight");
 
   } // end getAutonomousCommand()
 
