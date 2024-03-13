@@ -7,10 +7,16 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Shooter;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.utils.CommandTimer;
 
 public class ShooterOut extends Command {
 
+  private boolean isTimed = false;
+  private CommandTimer timer = null;
+
   private ShooterSubsystem shooter;
+
+  private long duration;
 
   /** Creates a new Intake roller out. 
    * @param intake the subsytem that is used for intake
@@ -21,9 +27,16 @@ public class ShooterOut extends Command {
     this.shooter = shooter;
   }
 
+  public ShooterOut(ShooterSubsystem shooter, long duration) {
+    this(shooter);
+    this.isTimed = true;
+    this.duration = duration;
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    timer = new CommandTimer(duration);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,6 +54,11 @@ public class ShooterOut extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(isTimed) {
+      if(timer.isComplete()) {
+        return true;
+      } 
+    }
     return false;
   }
 }

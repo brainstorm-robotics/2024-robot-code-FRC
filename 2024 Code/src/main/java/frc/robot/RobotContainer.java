@@ -139,16 +139,16 @@ public class RobotContainer {
         m_robotDrive)
     );*/
 
-    new JoystickButton(m_driverController, 1).whileTrue(
-      new ShooterOut(shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
+    new JoystickButton(m_driverController, 1).onTrue(
+      new ShooterOut(shooter, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
-    new JoystickButton(m_driverController, 3).whileTrue(//roll the things in
-      new IntakeRollerIn(intake).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
+    new JoystickButton(m_driverController, 3).onTrue(//roll the things in
+      new IntakeRollerIn(intake, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
-    new JoystickButton(m_driverController, 4).whileTrue(//roll the things out
-      new IntakeRollerOut(intake).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
+    new JoystickButton(m_driverController, 4).onTrue(//roll the things out
+      new IntakeRollerOut(intake, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
     new JoystickButton(m_driverController, 2).onTrue(//roll the things stop
