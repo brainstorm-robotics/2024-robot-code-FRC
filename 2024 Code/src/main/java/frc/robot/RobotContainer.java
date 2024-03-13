@@ -20,6 +20,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 //import frc.robot.Constants.Sensor;
 import frc.robot.Constants.Gyro;
 import frc.robot.Constants.OI;
+import frc.robot.commands.commandGroups.IntakeCycle;
+import frc.robot.commands.commandGroups.IntakeIn;
+import frc.robot.commands.commandGroups.Shoot;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shooter.ShooterOut;
 import frc.robot.subsystems.DriveSubsystem;
@@ -98,7 +101,7 @@ public class RobotContainer {
             -MathUtil.applyDeadband(m_driverController.getRawAxis(OI.JOYSTICK_Y_AXIS),  OI.kDriveDeadband),
             -MathUtil.applyDeadband(m_driverController.getRawAxis(OI.JOYSTICK_ROT_AXIS), OI.kDriveDeadband),
             true, true),
-          m_robotDrive)
+          m_robotDrive).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
         );
 
     // calibrate the gyros
@@ -161,6 +164,18 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, 6).onTrue(
       new IntakeArmUp(intake).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+    );
+
+    new JoystickButton(m_driverController, 7).onTrue(
+      new IntakeIn(intake, 1500)
+    );
+
+    new JoystickButton(m_driverController, 8).onTrue(
+      new IntakeCycle(intake, 1500)
+    );
+
+    new JoystickButton(m_driverController, 9).onTrue(
+      new Shoot(intake, shooter)
     );
 
 
