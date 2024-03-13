@@ -120,7 +120,12 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
             Drive.kModuleToCenterDistance, // Radius in meters of 2 robot using l^2 +w^2 both in inches
         new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
-        this, // flip the path? *** needs work ***
+        () -> {
+          boolean onRed = SmartDashboard.getBoolean("Red Alliance",true);
+
+          return onRed;
+        },
+        //this, // flip the path? *** needs work ***
         this // Reference to this subsystem to set requirements
     );
 
