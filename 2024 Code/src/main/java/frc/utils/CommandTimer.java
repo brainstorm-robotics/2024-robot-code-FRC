@@ -28,7 +28,7 @@ public class CommandTimer {
     * @return true if timer is done, else false
     */
     public boolean isComplete() {
-        System.out.println("init time: " + initTime + ", end time: " + endTime + ", current time: " + System.currentTimeMillis());
+        //System.out.println("init time: " + initTime + ", end time: " + endTime + ", current time: " + System.currentTimeMillis());
         if(System.currentTimeMillis() >= endTime) {
             return true;
         } 

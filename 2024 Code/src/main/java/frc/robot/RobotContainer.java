@@ -284,7 +284,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     //return autoChooser.getSelected();
-    return new PathPlannerAuto("straight");
+    return new PathPlannerAuto("180");
 
   } // end getAutonomousCommand()
 
