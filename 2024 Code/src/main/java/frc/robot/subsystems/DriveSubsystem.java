@@ -76,6 +76,12 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
   // private final FRCGyro   gyro2 = Gyro.m_gyro2; // secondary gyro
   
   // Slew rate filter variables for controlling lateral acceleration
+  double maxSpeed = 0;
+  double maxAccel = 0;
+  long lastFrame = 0;
+  double lastAngle = 0;
+
+
 
   private double m_currentRotation = 0.0;
   private double m_currentTranslationDir = 0.0;
@@ -102,6 +108,8 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
    * create a new DriveSubsystem
    */
   public DriveSubsystem() {
+    lastFrame = System.currentTimeMillis();
+    lastAngle = gyro.getAngle();
 
     // *** code added for Path Planner ***
 
@@ -294,6 +302,23 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+    long deltaTime = System.currentTimeMillis() - lastFrame;
+    lastFrame = System.currentTimeMillis();
+    double deltaAngle = gyro.getAngle() - lastAngle;
+    lastAngle = gyro.getAngle();
+    double speed = Math.abs(deltaAngle/deltaTime) * 1000;
+    double accel = (speed/deltaTime) * 1000;
+
+    if(speed > maxSpeed){
+      maxSpeed = speed;
+      //System.out.println("vel: " + maxSpeed);
+    }
+
+    if(accel > maxAccel){
+      maxAccel = accel;
+      //System.out.println("accel: " + maxAccel);
+    }
   } // end drive()
 
 

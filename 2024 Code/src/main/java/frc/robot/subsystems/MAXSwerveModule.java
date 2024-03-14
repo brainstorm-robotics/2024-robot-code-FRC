@@ -183,6 +183,4 @@ public class MAXSwerveModule {
 
   } // end resetEncoders()
 
-
-
 } // end class MAXSwerveModule

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 //import frc.robot.Constants.Sensor;
 import frc.robot.Constants.Gyro;
 import frc.robot.Constants.OI;
+import frc.robot.commands.Brake;
 import frc.robot.commands.commandGroups.IntakeCycle;
 import frc.robot.commands.commandGroups.IntakeIn;
 import frc.robot.commands.commandGroups.Shoot;
@@ -37,6 +38,7 @@ import frc.robot.subsystems.sensors.NavX2Gyro;
 //import frc.robot.subsystems.sensors.UltrasonicDistanceSensor;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 
@@ -103,7 +105,9 @@ public class RobotContainer {
             -MathUtil.applyDeadband(m_driverController.getRawAxis(OI.JOYSTICK_ROT_AXIS), OI.kDriveDeadband),
             true, true),
           m_robotDrive).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
-        );
+      );
+
+      NamedCommands.registerCommand("brake", new Brake(m_robotDrive));
 
     // calibrate the gyros
 

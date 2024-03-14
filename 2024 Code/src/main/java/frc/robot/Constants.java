@@ -264,7 +264,7 @@ public final class Constants {
   public static final class OI {
 
     public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.2;
+    public static final double kDriveDeadband = 0.4;
 
     public static final int JOYSTICK_X_AXIS = 1;
     public static final int JOYSTICK_Y_AXIS = 0;
