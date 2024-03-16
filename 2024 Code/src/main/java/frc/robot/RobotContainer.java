@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Gyro;
 import frc.robot.Constants.OI;
 import frc.robot.commands.Brake;
+import frc.robot.commands.DriveForward;
 import frc.robot.commands.commandGroups.IntakeCycle;
 import frc.robot.commands.commandGroups.IntakeIn;
 import frc.robot.commands.commandGroups.Shoot;
@@ -36,6 +37,8 @@ import frc.robot.subsystems.ShooterSubsystem;
 //import frc.robot.subsystems.sensors.LimitSwitch;
 import frc.robot.subsystems.sensors.NavX2Gyro;
 //import frc.robot.subsystems.sensors.UltrasonicDistanceSensor;
+
+import java.util.concurrent.SynchronousQueue;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -79,7 +82,7 @@ public class RobotContainer {
 
   // The driver and operator controllers
   
-  Joystick m_driverController   = new Joystick(OI.kDriverControllerPort);
+  XboxController m_driverController   = new XboxController(OI.kDriverControllerPort);//new Joystick(OI.kDriverControllerPort);
   //XboxController m_operatorController = new XboxController(OI.kOperatorControllerPort);
 
 
@@ -108,6 +111,7 @@ public class RobotContainer {
       );
 
       NamedCommands.registerCommand("brake", new Brake(m_robotDrive));
+      NamedCommands.registerCommand("shoot", new Shoot(intake, shooter));
 
     // calibrate the gyros
 
@@ -147,7 +151,7 @@ public class RobotContainer {
         m_robotDrive)
     );*/
 
-    new JoystickButton(m_driverController, 1).onTrue(
+    /*new JoystickButton(m_driverController, 1).onTrue(
       new ShooterOut(shooter, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
@@ -169,18 +173,22 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, 6).onTrue(
       new IntakeArmUp(intake).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-    );
+    );*/
 
-    new JoystickButton(m_driverController, 7).onTrue(
+    new JoystickButton(m_driverController, 3).onTrue(
       new IntakeIn(intake, 1500)
     );
 
-    new JoystickButton(m_driverController, 8).onTrue(
+    new JoystickButton(m_driverController, 1).onTrue(
       new IntakeCycle(intake, 1500)
     );
 
-    new JoystickButton(m_driverController, 9).onTrue(
+    new JoystickButton(m_driverController, 2).onTrue(
       new Shoot(intake, shooter)
+    );
+
+    new JoystickButton(m_driverController, 4).onTrue(
+      new DriveForward(m_robotDrive)
     );
 
 
@@ -284,7 +292,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     //return autoChooser.getSelected();
-    return new PathPlannerAuto("180");
+    return new PathPlannerAuto("moving");
 
   } // end getAutonomousCommand()
 
