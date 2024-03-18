@@ -23,6 +23,7 @@ import frc.robot.Constants.OI;
 import frc.robot.commands.Brake;
 import frc.robot.commands.DriveForward;
 import frc.robot.commands.commandGroups.IntakeCycle;
+import frc.robot.commands.commandGroups.IntakeCycleDrive;
 import frc.robot.commands.commandGroups.IntakeIn;
 import frc.robot.commands.commandGroups.Shoot;
 import frc.robot.commands.intake.*;
@@ -176,7 +177,7 @@ public class RobotContainer {
     );*/
 
     new JoystickButton(m_driverController, 3).onTrue(
-      new IntakeIn(intake, 1500)
+      new IntakeCycleDrive(intake, m_robotDrive, 1000)
     );
 
     new JoystickButton(m_driverController, 1).onTrue(
@@ -292,7 +293,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     //return autoChooser.getSelected();
-    return new PathPlannerAuto("moving");
+    return new PathPlannerAuto("moveStraight");
 
   } // end getAutonomousCommand()
 

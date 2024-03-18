@@ -8,14 +8,21 @@ import frc.utils.CommandTimer;
 public class DriveForward extends Command{
     DriveSubsystem drive;
     CommandTimer timer;
+    long duration;
 
     public DriveForward(DriveSubsystem drive){
+        this(drive, 1000);
+    }
+
+    public DriveForward(DriveSubsystem drive, long duration){
         this.drive = drive;
+        this.duration = duration;
+        addRequirements(drive);
     }
 
     @Override
   public void initialize() {
-    timer = new CommandTimer(1000);//change later
+    timer = new CommandTimer(duration);//change later
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -90,8 +90,8 @@ public final class Constants {
     public static final double kIntakeSpeed      = 0.4; // negative for intake a note
     public static final double kFeedShooterSpeed =  -0.4; // positive for feeding the shooter
 
-    public static final double kRotateForIntakeSpeed         = 0.2; // negative for intake position
-    public static final double kRotateForFeedingShooterSpeed = -0.35; // positive for shooter position
+    public static final double kRotateForIntakeSpeed         = 1; // negative for intake position
+    public static final double kRotateForFeedingShooterSpeed = -1; // positive for shooter position
 
   } // end class Intake
 
@@ -150,8 +150,8 @@ public final class Constants {
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kMagnitudeSlewRate = 1.1; // percent per second (1 = 100%) was 1
+    public static final double kRotationalSlewRate = 1.25; // percent per second (1 = 100%)
 
     // Chassis configuration
 
@@ -233,9 +233,9 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.04;//0.06
+    public static final double kDrivingP = 0.2;//0.06
     public static final double kDrivingI = 0;
-    public static final double kDrivingD = 0;
+    public static final double kDrivingD = 0.5; //was.2//was 0.1 //was 0 :)
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;

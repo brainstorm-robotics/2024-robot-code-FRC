@@ -122,8 +122,8 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
         this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            new PIDConstants(5, 0.0, 0.3), // Translation PID constants
-            new PIDConstants(6, 0.0, 0.5), // Rotation PID constants
+            new PIDConstants(1, 0.0, 0), // Translation PID constants
+            new PIDConstants(1, 0.0, 0), // Rotation PID constants
             4.5, // Max module speed, in m/s
             Drive.kModuleToCenterDistance, // Radius in meters of 2 robot using l^2 +w^2 both in inches
         new ReplanningConfig() // Default path replanning config. See the API for the options here
@@ -243,7 +243,7 @@ public class DriveSubsystem extends SubsystemBase implements BooleanSupplier {
         directionSlewRate = Math.abs(Drive.kDirectionSlewRate / m_currentTranslationMag);
       } // end if 
       else {
-        directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
+        directionSlewRate = 1000.0; //some high number that means the slew rate is effectively instantaneous
       } // end else
 
       double currentTime = WPIUtilJNI.now() * 1e-6;
