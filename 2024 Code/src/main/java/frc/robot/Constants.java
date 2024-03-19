@@ -66,6 +66,12 @@ public final class Constants {
     public static final double  kAngleTolerance  = 10; // in degrees
     public static final double  kClimbTolerance  = 300; // in ticks
 
+    public static final int LEFT_ID = 55;
+    public static final int RIGHT_ID = 56;
+
+    public static final double MIN_ROTATIONS = 0;
+    public static final double MAX_ROTATIONS = 121;
+
   } // end class Climber
 
 

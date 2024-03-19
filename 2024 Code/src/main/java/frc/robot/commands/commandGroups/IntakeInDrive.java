@@ -1,6 +1,7 @@
 package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveForward;
 import frc.robot.commands.intake.IntakeArmDown;
@@ -18,8 +19,10 @@ public class IntakeInDrive extends SequentialCommandGroup{
             new IntakeArmDown(intake),
             new ParallelCommandGroup(
                 new IntakeRollerIn(intake, duration),
-                new DriveForward(drive, duration)
+                new ScheduleCommand(new DriveForward(drive, duration))
+                //new DriveForward(drive, duration)
             )
+            
         );
     }
 }
