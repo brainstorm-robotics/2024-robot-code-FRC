@@ -96,8 +96,8 @@ public final class Constants {
     public static final double kIntakeSpeed      = 0.4; // negative for intake a note
     public static final double kFeedShooterSpeed =  -0.4; // positive for feeding the shooter
 
-    public static final double kRotateForIntakeSpeed         = 1; // negative for intake position
-    public static final double kRotateForFeedingShooterSpeed = -1; // positive for shooter position
+    public static final double kRotateForIntakeSpeed         = 0.8; // negative for intake position
+    public static final double kRotateForFeedingShooterSpeed = -0.8; // positive for shooter position
 
   } // end class Intake
 
