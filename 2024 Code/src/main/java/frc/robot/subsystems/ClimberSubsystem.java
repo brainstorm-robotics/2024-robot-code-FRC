@@ -84,7 +84,7 @@ public class ClimberSubsystem extends SubsystemBase{
      * @param goingUp true if going up
      * @return returns true if at the desired position
      */
-    public boolean setState(boolean goingUp){
+    public void setState(boolean goingUp){
         double desired = Climber.MIN_ROTATIONS;
         if(goingUp){
             desired = Climber.MAX_ROTATIONS;
@@ -92,16 +92,5 @@ public class ClimberSubsystem extends SubsystemBase{
         
         leftClimber.setControl(leftRequest.withPosition(desired));
         rightClimber.setControl(rightRequest.withPosition(desired));
-        
-        if(goingUp){
-            if(leftClimber.getPosition().getValueAsDouble() >= Climber.MAX_ROTATIONS && rightClimber.getPosition().getValueAsDouble() >= Climber.MAX_ROTATIONS){
-                return true;
-            }
-        } else{
-            if(leftClimber.getPosition().getValueAsDouble() <= Climber.MIN_ROTATIONS && rightClimber.getPosition().getValueAsDouble() <= Climber.MIN_ROTATIONS){
-                return true;
-            }
-        }
-        return false;
     }
 }

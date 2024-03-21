@@ -22,12 +22,15 @@ import frc.robot.Constants.Gyro;
 import frc.robot.Constants.OI;
 import frc.robot.commands.Brake;
 import frc.robot.commands.DriveForward;
+import frc.robot.commands.climber.ClimberDown;
+import frc.robot.commands.climber.ClimberUp;
 import frc.robot.commands.commandGroups.IntakeCycle;
 import frc.robot.commands.commandGroups.IntakeCycleDrive;
 import frc.robot.commands.commandGroups.IntakeIn;
 import frc.robot.commands.commandGroups.Shoot;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shooter.ShooterOut;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 //import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -67,6 +70,8 @@ public class RobotContainer {
   private final IntakeSubsystem intake = new IntakeSubsystem();
 
   private final ShooterSubsystem shooter = new ShooterSubsystem();
+
+  private final ClimberSubsystem climber = new ClimberSubsystem();
   //private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(gyro);
   //private final IntakeSubsystem  intakeSubsystem  = new IntakeSubsystem();
   //private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
@@ -177,19 +182,27 @@ public class RobotContainer {
     );*/
 
     new JoystickButton(m_driverController, 3).onTrue(
-      new IntakeCycleDrive(intake, m_robotDrive, 1000)
+      new IntakeCycleDrive(intake, m_robotDrive, 1000).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
     );
 
     new JoystickButton(m_driverController, 1).onTrue(
-      new IntakeCycle(intake, 1500)
+      new IntakeCycle(intake, 1500).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
     );
 
     new JoystickButton(m_driverController, 2).onTrue(
-      new Shoot(intake, shooter)
+      new Shoot(intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
     );
 
     new JoystickButton(m_driverController, 4).onTrue(
-      new DriveForward(m_robotDrive)
+      new DriveForward(m_robotDrive).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
+    );
+
+    new JoystickButton(m_driverController, 5).onTrue(
+      new ClimberUp(climber, 1000).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+    );
+
+    new JoystickButton(m_driverController, 6).onTrue(
+      new ClimberDown(climber, 1000).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
     );
 
 
