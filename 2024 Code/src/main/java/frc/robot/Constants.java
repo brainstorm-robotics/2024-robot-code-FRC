@@ -69,8 +69,8 @@ public final class Constants {
     public static final int LEFT_ID = 55;
     public static final int RIGHT_ID = 56;
 
-    public static final double MIN_ROTATIONS = 0;
-    public static final double MAX_ROTATIONS = 121;
+    public static final double MIN_ROTATIONS = 0;//-130;
+    public static final double MAX_ROTATIONS = 130;//0;
 
   } // end class Climber
 
@@ -125,18 +125,7 @@ public final class Constants {
     // the following require tuning
 
     public static final double SHOOT_SPEED = 0.7;
-
-    public static final double kSpeakerShotSpeed = 1.0; // positive for shooting
-    public static final double kSpeakerShotAngle = 0.3; // use absolute encoder setting
-
-    public static final double kDriveBySpeed     = 1.0; // positive for shooting
-    public static final double kDriveByAngle     = 0.3; // use absolute encoder setting
-
-    public static final double kAmpShotSpeed     = 1.0; // positive for shooting
-    public static final double kAmpShotAngle     = 0.3; // use absolute encoder setting
-
-    public static final double kTrapShotSpeed    = 1.0; // positive for shooting
-    public static final double kTrapShotAngle    = 0.3; // use absolute encoder setting
+    public static final double AMP_SPEED = 0.3;//arbitrary
     
     public static final double dTicks            = 10.0; // requires tuning
 
@@ -156,8 +145,8 @@ public final class Constants {
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 1.1; // percent per second (1 = 100%) was 1
-    public static final double kRotationalSlewRate = 1.25; // percent per second (1 = 100%)
+    public static final double kMagnitudeSlewRate = 1.5; // percent per second (1 = 100%) was 1
+    public static final double kRotationalSlewRate = 1.6; // percent per second (1 = 100%)
 
     // Chassis configuration
 

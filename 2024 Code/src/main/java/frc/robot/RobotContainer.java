@@ -28,6 +28,7 @@ import frc.robot.commands.commandGroups.IntakeCycle;
 import frc.robot.commands.commandGroups.IntakeCycleDrive;
 import frc.robot.commands.commandGroups.IntakeIn;
 import frc.robot.commands.commandGroups.Shoot;
+import frc.robot.commands.commandGroups.ShootAmp;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shooter.ShooterOut;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -44,6 +45,7 @@ import frc.robot.subsystems.sensors.NavX2Gyro;
 
 import java.util.concurrent.SynchronousQueue;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -89,7 +91,7 @@ public class RobotContainer {
   // The driver and operator controllers
   
   XboxController m_driverController   = new XboxController(OI.kDriverControllerPort);//new Joystick(OI.kDriverControllerPort);
-  //XboxController m_operatorController = new XboxController(OI.kOperatorControllerPort);
+  XboxController m_operatorController = new XboxController(OI.kOperatorControllerPort);
 
 
 
@@ -181,28 +183,47 @@ public class RobotContainer {
       new IntakeArmUp(intake).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
     );*/
 
-    new JoystickButton(m_driverController, 3).onTrue(
+    new JoystickButton(m_operatorController, 3).onTrue(
       new IntakeCycleDrive(intake, m_robotDrive, 1000).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
     );
 
-    new JoystickButton(m_driverController, 1).onTrue(
+    new JoystickButton(m_operatorController, 1).onTrue(
       new IntakeCycle(intake, 1500).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
     );
 
-    new JoystickButton(m_driverController, 2).onTrue(
+    new JoystickButton(m_operatorController, 2).onTrue(
       new Shoot(intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
     );
 
-    new JoystickButton(m_driverController, 4).onTrue(
-      new DriveForward(m_robotDrive).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
+    new JoystickButton(m_operatorController, 5).onTrue(
+      new IntakeRollerOut(intake, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
-    new JoystickButton(m_driverController, 5).onTrue(
+    /*new JoystickButton(m_operatorController, 4).onTrue(
+      new ShootAmp(intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
+    );*/
+    
+    //y is free
+
+    new JoystickButton(m_driverController, 6).onTrue(
       new ClimberUp(climber, 1000).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
     );
 
-    new JoystickButton(m_driverController, 6).onTrue(
+    new JoystickButton(m_driverController, 5).onTrue(
       new ClimberDown(climber, 1000).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+    );
+
+
+
+
+
+
+    new JoystickButton(m_driverController, 1).onTrue(
+      new DriveForward(m_robotDrive, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
+    );
+
+    new JoystickButton(m_driverController, 2).onTrue(
+      new Brake(m_robotDrive).withInterruptBehavior(InterruptionBehavior.kCancelSelf)//brake
     );
 
 
@@ -306,7 +327,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     //return autoChooser.getSelected();
-    return new PathPlannerAuto("moveStraight");
+    return new DriveForward(m_robotDrive, 3000);//new Shoot(intake, shooter);
 
   } // end getAutonomousCommand()
 
