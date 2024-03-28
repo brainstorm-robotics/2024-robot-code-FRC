@@ -96,8 +96,8 @@ public final class Constants {
     public static final double kIntakeSpeed      = 0.4; // negative for intake a note
     public static final double kFeedShooterSpeed =  -0.4; // positive for feeding the shooter
 
-    public static final double kRotateForIntakeSpeed         = 0.8; // negative for intake position
-    public static final double kRotateForFeedingShooterSpeed = -0.8; // positive for shooter position
+    public static final double kRotateForIntakeSpeed         = 0.4; // negative for intake position
+    public static final double kRotateForFeedingShooterSpeed = -0.4; // positive for shooter position
 
   } // end class Intake
 
@@ -145,8 +145,8 @@ public final class Constants {
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 1.5; // percent per second (1 = 100%) was 1
-    public static final double kRotationalSlewRate = 1.6; // percent per second (1 = 100%)
+    public static final double kMagnitudeSlewRate = 1.65; // percent per second (1 = 100%) was 1
+    public static final double kRotationalSlewRate = 1.8; // percent per second (1 = 100%)
 
     // Chassis configuration
 

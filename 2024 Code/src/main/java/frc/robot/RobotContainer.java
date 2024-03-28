@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
-
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
@@ -14,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -22,6 +25,7 @@ import frc.robot.Constants.Gyro;
 import frc.robot.Constants.OI;
 import frc.robot.commands.Brake;
 import frc.robot.commands.DriveForward;
+import frc.robot.commands.GyroCalibrate;
 import frc.robot.commands.climber.ClimberDown;
 import frc.robot.commands.climber.ClimberUp;
 import frc.robot.commands.commandGroups.IntakeCycle;
@@ -29,6 +33,7 @@ import frc.robot.commands.commandGroups.IntakeCycleDrive;
 import frc.robot.commands.commandGroups.IntakeIn;
 import frc.robot.commands.commandGroups.Shoot;
 import frc.robot.commands.commandGroups.ShootAmp;
+import frc.robot.commands.commandGroups.ShooterIntake;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shooter.ShooterOut;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -74,6 +79,9 @@ public class RobotContainer {
   private final ShooterSubsystem shooter = new ShooterSubsystem();
 
   private final ClimberSubsystem climber = new ClimberSubsystem();
+
+  private UsbCamera cam1;
+  private UsbCamera cam2;
   //private final ClimberSubsystem climberSubsystem = new ClimberSubsystem(gyro);
   //private final IntakeSubsystem  intakeSubsystem  = new IntakeSubsystem();
   //private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
@@ -101,6 +109,8 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Configure the button bindings
+    cam1 = CameraServer.startAutomaticCapture(0);
+    //cam2 = CameraServer.startAutomaticCapture(1);
 
     configureButtonBindings();
 
@@ -134,6 +144,11 @@ public class RobotContainer {
 
       // Another option that allows you to specify the default auto by its name
       // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+
+
+      autoChooser.addOption("drive forward", new DriveForward(m_robotDrive, 3000));
+      autoChooser.addOption("shoot", new Shoot(intake, shooter));
+      autoChooser.addOption("shoot then drive", new SequentialCommandGroup(new Shoot(intake, shooter), new DriveForward(m_robotDrive, 3000)));
 
       // put the choices on the SmartDashboard
     
@@ -199,24 +214,23 @@ public class RobotContainer {
       new IntakeRollerOut(intake, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
-    /*new JoystickButton(m_operatorController, 4).onTrue(
-      new ShootAmp(intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
-    );*/
+    new JoystickButton(m_operatorController, 6).onTrue(
+      new IntakeArmDown(intake).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+    );
+
+    new JoystickButton(m_operatorController, 4).onTrue(
+      new ShooterIntake(intake, shooter).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+    );
     
     //y is free
 
     new JoystickButton(m_driverController, 6).onTrue(
-      new ClimberUp(climber, 1000).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+      new ClimberUp(climber, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
     new JoystickButton(m_driverController, 5).onTrue(
-      new ClimberDown(climber, 1000).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+      new ClimberDown(climber, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
-
-
-
-
-
 
     new JoystickButton(m_driverController, 1).onTrue(
       new DriveForward(m_robotDrive, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
@@ -224,6 +238,10 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, 2).onTrue(
       new Brake(m_robotDrive).withInterruptBehavior(InterruptionBehavior.kCancelSelf)//brake
+    );
+
+    new JoystickButton(m_driverController, 3).onTrue(
+      new GyroCalibrate(gyro)
     );
 
 
@@ -326,8 +344,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    //return autoChooser.getSelected();
-    return new DriveForward(m_robotDrive, 3000);//new Shoot(intake, shooter);
+    return autoChooser.getSelected();
+    //new Shoot(intake, shooter);
 
   } // end getAutonomousCommand()
 

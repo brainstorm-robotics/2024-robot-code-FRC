@@ -22,6 +22,7 @@ public class ClimberUp extends Command{
   @Override
     public void initialize() {
         timer = new CommandTimer(duration);
+        climber.setBrakes(false);
     }  
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,9 +40,10 @@ public class ClimberUp extends Command{
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    /*
     if(timer.isComplete()) {
         return true;   
-    } 
+    } */
     return false;
   }
 }

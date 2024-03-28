@@ -172,7 +172,7 @@ public class Robot extends TimedRobot {
    */
   private void updateSmartDashboard() {
 
-    Gyro.m_gyro       .updateSmartDashboard();
+    //Gyro.m_gyro       .updateSmartDashboard();
     //Gyro.m_gyro2      .updateSmartDashboard();
     //Sensor.m_distance1.updateSmartDashboard();
     //Sensor.m_distance2.updateSmartDashboard();

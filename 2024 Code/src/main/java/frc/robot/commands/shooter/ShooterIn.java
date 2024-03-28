@@ -42,7 +42,7 @@ public class ShooterIn extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.shoot(Shooter.SHOOT_SPEED);
+    shooter.shoot(-Shooter.SHOOT_SPEED);
   }
 
   // Called once the command ends or is interrupted.
