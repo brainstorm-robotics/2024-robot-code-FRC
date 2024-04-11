@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
@@ -15,7 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -24,13 +28,17 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Gyro;
 import frc.robot.Constants.OI;
 import frc.robot.commands.Brake;
+import frc.robot.commands.DriveBackward;
 import frc.robot.commands.DriveForward;
 import frc.robot.commands.GyroCalibrate;
+import frc.robot.commands.WaitMillis;
 import frc.robot.commands.climber.ClimberDown;
 import frc.robot.commands.climber.ClimberUp;
 import frc.robot.commands.commandGroups.IntakeCycle;
 import frc.robot.commands.commandGroups.IntakeCycleDrive;
+import frc.robot.commands.commandGroups.IntakeCycleDriveReturnShot;
 import frc.robot.commands.commandGroups.IntakeIn;
+import frc.robot.commands.commandGroups.IntakeInDrive;
 import frc.robot.commands.commandGroups.Shoot;
 import frc.robot.commands.commandGroups.ShootAmp;
 import frc.robot.commands.commandGroups.ShooterIntake;
@@ -101,6 +109,8 @@ public class RobotContainer {
   XboxController m_driverController   = new XboxController(OI.kDriverControllerPort);//new Joystick(OI.kDriverControllerPort);
   XboxController m_operatorController = new XboxController(OI.kOperatorControllerPort);
 
+  private boolean fieldRelative = true;
+
 
 
   /**
@@ -117,19 +127,32 @@ public class RobotContainer {
     // Configure default commands
 
     m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-          () -> m_robotDrive.drive(
-            -MathUtil.applyDeadband(m_driverController.getRawAxis(OI.JOYSTICK_X_AXIS),  OI.kDriveDeadband),
-            -MathUtil.applyDeadband(m_driverController.getRawAxis(OI.JOYSTICK_Y_AXIS),  OI.kDriveDeadband),
-            -MathUtil.applyDeadband(m_driverController.getRawAxis(OI.JOYSTICK_ROT_AXIS), OI.kDriveDeadband),
-            true, true),
-          m_robotDrive).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
-      );
+      // The left stick controls translation of the robot.
+      // Turning is controlled by the X axis of the right stick.
+      new RunCommand(
+        () -> {
+          double xSpeed = -MathUtil.applyDeadband(m_driverController.getRawAxis(OI.JOYSTICK_X_AXIS),  OI.kDriveDeadband);
+          double ySpeed = -MathUtil.applyDeadband(m_driverController.getRawAxis(OI.JOYSTICK_Y_AXIS),  OI.kDriveDeadband);
+          if(m_driverController.getPOV() < 0){
+            fieldRelative = true;
+          } else {//using dpad
+            double maxVelMag = 0.5;
+            xSpeed = maxVelMag * Math.cos(Math.toRadians(m_driverController.getPOV()));
+            ySpeed = -maxVelMag * Math.sin(Math.toRadians(m_driverController.getPOV()));
+            System.out.println("POV: " + m_driverController.getPOV() + " xSpeed: " + xSpeed + " ySpeed: " + ySpeed);
+            fieldRelative = false;
+          }
+          m_robotDrive.drive(
+          xSpeed,
+          ySpeed,
+          -MathUtil.applyDeadband(m_driverController.getRawAxis(OI.JOYSTICK_ROT_AXIS), OI.kDriveDeadband),
+          fieldRelative, true);
+        },
+        m_robotDrive).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
+    );
 
-      NamedCommands.registerCommand("brake", new Brake(m_robotDrive));
-      NamedCommands.registerCommand("shoot", new Shoot(intake, shooter));
+    NamedCommands.registerCommand("brake", new Brake(m_robotDrive));
+    NamedCommands.registerCommand("shoot", new Shoot(intake, shooter));
 
     // calibrate the gyros
 
@@ -148,7 +171,22 @@ public class RobotContainer {
 
       autoChooser.addOption("drive forward", new DriveForward(m_robotDrive, 3000));
       autoChooser.addOption("shoot", new Shoot(intake, shooter));
-      autoChooser.addOption("shoot then drive", new SequentialCommandGroup(new Shoot(intake, shooter), new DriveForward(m_robotDrive, 3000)));
+      autoChooser.addOption("shoot then drive", new SequentialCommandGroup(
+        new Shoot(intake, shooter), 
+        new DriveForward(m_robotDrive, 3000)
+      ));
+      autoChooser.addOption("wait shoot", new SequentialCommandGroup(
+        new WaitMillis(1000), 
+        new Shoot(intake, shooter)
+      ));
+      autoChooser.addOption("2 piece", new SequentialCommandGroup(
+        new Shoot(intake, shooter), 
+        new DriveForward(m_robotDrive, 2000),
+        new IntakeCycleDriveReturnShot(intake, m_robotDrive, shooter, 1500)
+        //new IntakeCycleDrive(intake, m_robotDrive, 1500)
+        /*new DriveBackward(m_robotDrive, 3500), 
+        new Shoot(intake, shooter)*/
+      ));
 
       // put the choices on the SmartDashboard
     
@@ -199,11 +237,11 @@ public class RobotContainer {
     );*/
 
     new JoystickButton(m_operatorController, 3).onTrue(
-      new IntakeCycleDrive(intake, m_robotDrive, 1000).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+      new IntakeCycleDrive(intake, m_robotDrive, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
     new JoystickButton(m_operatorController, 1).onTrue(
-      new IntakeCycle(intake, 1500).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+      new IntakeCycle(intake, 1500).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
     new JoystickButton(m_operatorController, 2).onTrue(
@@ -223,7 +261,7 @@ public class RobotContainer {
     );
     
     //y is free
-
+    
     new JoystickButton(m_driverController, 6).onTrue(
       new ClimberUp(climber, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
@@ -236,7 +274,7 @@ public class RobotContainer {
       new DriveForward(m_robotDrive, 1000).withInterruptBehavior(InterruptionBehavior.kCancelSelf)
     );
 
-    new JoystickButton(m_driverController, 2).onTrue(
+    new JoystickButton(m_driverController, 2).whileTrue(
       new Brake(m_robotDrive).withInterruptBehavior(InterruptionBehavior.kCancelSelf)//brake
     );
 

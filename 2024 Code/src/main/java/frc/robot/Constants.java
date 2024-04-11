@@ -93,7 +93,7 @@ public final class Constants {
     public static final double MAX_ARM_ROTATION = 0.485;//0.5
     public static final double MIN_ARM_ROTATION = 0.01;//0.1
 
-    public static final double kIntakeSpeed      = 0.4; // negative for intake a note
+    public static final double kIntakeSpeed      = 0.2; // negative for intake a note
     public static final double kFeedShooterSpeed =  -0.4; // positive for feeding the shooter
 
     public static final double kRotateForIntakeSpeed         = 0.4; // negative for intake position
@@ -141,7 +141,7 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
 
-    public static final double kMaxSpeedMetersPerSecond = 4.5;
+    public static final double kMaxSpeedMetersPerSecond = 3.5;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second

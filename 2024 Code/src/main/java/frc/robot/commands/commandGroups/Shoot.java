@@ -12,7 +12,7 @@ public class Shoot extends ParallelDeadlineGroup{
     public Shoot(IntakeSubsystem intake, ShooterSubsystem shooter){
         super(//deadline, commands...
             new SequentialCommandGroup(
-                new WaitMillis(500),
+                new WaitMillis(1000),
                 new IntakeRollerOut(intake, 500)
             ),
             new ShooterOut(shooter)

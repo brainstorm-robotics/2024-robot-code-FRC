@@ -1,28 +1,34 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.utils.CommandTimer;
 
-public class Brake extends Command{
+public class DriveBackward extends Command{
     DriveSubsystem drive;
-    private CommandTimer timer;
+    CommandTimer timer;
+    long duration;
 
-    public Brake(DriveSubsystem drive){
-        addRequirements(drive);
-        this.drive = drive;
+    public DriveBackward(DriveSubsystem drive){
+        this(drive, 1000);
     }
-    
-    // Called when the command is initially scheduled.
-  @Override
+
+    public DriveBackward(DriveSubsystem drive, long duration){
+        this.drive = drive;
+        this.duration = duration;
+        addRequirements(drive);
+    }
+
+    @Override
   public void initialize() {
-    //timer = new CommandTimer(5000);//change later
+    timer = new CommandTimer(duration);//change later
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.setX();
+    drive.driveRobotRelative(new ChassisSpeeds(-0.25, 0, 0));
   }
 
   // Called once the command ends or is interrupted.
@@ -34,6 +40,6 @@ public class Brake extends Command{
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;//timer.isComplete();
+    return timer.isComplete();
   }
 }
